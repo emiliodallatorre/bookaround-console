@@ -1,24 +1,26 @@
+# Firebase
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+# Utility
 import dateutil.parser
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
 
-# Use a service account
-cred = credentials.Certificate('secret.json')
-firebase_admin.initialize_app(cred)
-
+# Seleziona l"account di servizio
+credentials = credentials.Certificate("secret.json")
+firebase_admin.initialize_app(credentials)
 db = firestore.client()
 
-all_users: list = db.collection(u'users').get()
-all_books: list = db.collection(u'books').get()
+# Recupera i dati utili
+all_users: list = db.collection(u"users").get()
+all_books: list = db.collection(u"books").get()
 
 print(f"Oggi abbiamo {len(all_users)} utenti!")
 print(f"I libri, fra cercati e venduti, sono, invece, {len(all_books)}.")
 
-# Comincia a salvare le date
+# Prepara i dati per il grafico
 book_dates: list = list(
     map(lambda book: dateutil.parser.isoparse(book.to_dict()["addedDateTime"]), all_books))
 
@@ -36,6 +38,7 @@ for index in range(1, len(sorted_book_dates)):
 
 x, y = zip(*sorted_book_dates)
 
+# Mostra il grafico
 figure(figsize=(10, 6), dpi=80)
 plt.plot_date(x, y, "-g")
 plt.show()
