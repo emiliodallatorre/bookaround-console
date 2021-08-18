@@ -1,0 +1,6 @@
+# File di progetto
+venv/
+.idea/
+
+# File delle password
+secret.json
