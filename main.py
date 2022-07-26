@@ -20,6 +20,17 @@ all_books: list = db.collection(u"books").get()
 print(f"Oggi abbiamo {len(all_users)} utenti!")
 print(f"I libri, fra cercati e venduti, sono, invece, {len(all_books)}.")
 
+selling: int = 0
+looking: int = 0
+for book in all_books:
+    if book.to_dict()["type"] == "LOOKING":
+        looking += 1
+    else:
+        selling += 1
+
+print(f"In totale, abbiamo {looking} libri in vendita e {selling} in cerca.")
+
+
 # Prepara i dati per il grafico
 book_dates: list = list(
     map(lambda book: dateutil.parser.isoparse(book.to_dict()["addedDateTime"]), all_books))
@@ -42,3 +53,14 @@ x, y = zip(*sorted_book_dates)
 figure(figsize=(10, 6), dpi=80)
 plt.plot_date(x, y, "-g")
 plt.show()
+
+user_names: list = []
+for user in all_users:
+    try:
+        user_names.append(f"{user.to_dict()['name']} {user.to_dict()['surname']}")
+    except KeyError:
+        if False:
+            print(f"Problemi con:\n{user.to_dict()}")
+
+print("\n".join(sorted(user_names)))
+# plt.imsave("result.png")
